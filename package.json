@@ -12,12 +12,10 @@
     "microbundle": "^0.11.0"
   },
   "dependencies": {
-    "@pojntfx/jitsi-meet-node-client": "^1.0.1",
-    "sleep": "^6.1.0",
-    "threads": "^1.4.0"
+    "@pojntfx/jitsi-meet-node-client": "^1.0.3"
   },
   "scripts": {
-    "build": "microbundle && microbundle -i worker.js -o dist/worker.js",
+    "build": "microbundle",
     "start": "node dist/main.js"
   }
 }

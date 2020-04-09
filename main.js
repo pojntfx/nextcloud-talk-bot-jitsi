@@ -1,4 +1,4 @@
-import { spawn, Thread, Worker } from "threads";
+import Jitsi from "@pojntfx/jitsi-meet-node-client/dist";
 
 const main = async () => {
   const roomsToCreate = [
@@ -11,18 +11,24 @@ const main = async () => {
   const botName = process.env.JITSI_BOT_NAME;
   const sleepTime = process.env.JITSI_SLEEP_TIME;
 
+  const jitsi = new Jitsi();
+
+  process.on("SIGINT", async () => await jitsi.close());
+  await jitsi.open();
+
   await Promise.all(
     roomsToCreate.map(async (room) => {
-      const worker = await spawn(new Worker("./worker"));
-      await worker.createRoom(domain, room[0], botName, room[1], sleepTime);
+      await jitsi.createRoom(domain, room[0], botName, room[1]);
 
-      await new Promise((resolve) =>
+      console.log("Created room", `${domain}/${room[0]}`);
+
+      return await new Promise((resolve) =>
         setInterval(() => resolve(), sleepTime * 1000)
       );
-
-      await Thread.terminate(worker);
     })
   );
+
+  await jitsi.close();
 };
 
 main();
