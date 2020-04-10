@@ -13,7 +13,8 @@
   "dependencies": {
     "@pojntfx/jitsi-meet-node-client": "^1.0.3",
     "google-protobuf": "^3.11.4",
-    "grpc": "^1.24.2"
+    "grpc": "^1.24.2",
+    "pino": "^6.1.1"
   },
   "scripts": {
     "build": "mkdir -p ./src/protos/generated && grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/protos/generated --grpc_out=./src/protos/generated --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` -I=./src/protos ./src/protos/*.proto",
