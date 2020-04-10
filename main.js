@@ -1,4 +1,9 @@
-import Jitsi from "@pojntfx/jitsi-meet-node-client/dist";
+const Jitsi = require("@pojntfx/jitsi-meet-node-client/dist");
+const {
+  NextcloudTalkClient,
+} = require("./protos/generated/nextcloud_talk_grpc_pb");
+const { InChat } = require("./protos/generated/nextcloud_talk_pb");
+const grpc = require("grpc");
 
 const main = async () => {
   const roomsToCreate = [
@@ -10,6 +15,18 @@ const main = async () => {
   const domain = process.env.JITSI_DOMAIN;
   const botName = process.env.JITSI_BOT_NAME;
   const sleepTime = process.env.JITSI_SLEEP_TIME;
+  const nxtalkproxydURL = process.env.NXTALK_PROXYD_URL;
+
+  const client = new NextcloudTalkClient(
+    nxtalkproxydURL,
+    grpc.credentials.createInsecure()
+  );
+
+  const inChat = new InChat();
+  inChat.setToken("2j9j95et");
+  inChat.setMessage("Testing");
+
+  await new Promise((resolve) => client.writeChat(inChat, () => resolve()));
 
   const jitsi = new Jitsi();
 
