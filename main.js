@@ -1,29 +1,21 @@
+const NextcloudTalkBot = require("./src/nextcloudTalkBot");
 const Jitsi = require("@pojntfx/jitsi-meet-node-client/dist");
-const {
-  NextcloudTalkClient,
-} = require("./protos/generated/nextcloud_talk_grpc_pb");
-const { InChat } = require("./protos/generated/nextcloud_talk_pb");
-const { Empty } = require("google-protobuf/google/protobuf/empty_pb.js");
-const grpc = require("grpc");
+const crypto = require("crypto");
 
-const main = async () => {
+(async () => {
   const domain = process.env.JITSI_DOMAIN;
   const botName = process.env.JITSI_BOT_NAME;
   const sleepTime = process.env.JITSI_SLEEP_TIME;
   const nxtalkproxydURL = process.env.NXTALK_PROXYD_URL;
-
-  const client = new NextcloudTalkClient(
-    nxtalkproxydURL,
-    grpc.credentials.createInsecure()
-  );
+  const passwordLength = process.env.JITSI_PASSWORD_LENGTH;
 
   const jitsi = new Jitsi();
-
   process.on("SIGINT", async () => await jitsi.close());
   await jitsi.open();
 
-  const chats = client.readChats(new Empty());
-  chats.on("data", async (chat) => {
+  const bot = new NextcloudTalkBot(nxtalkproxydURL);
+
+  await bot.readChats(async (chat) => {
     const message = chat.getMessage();
 
     if (!/^#(videochat|videocall)/.test(message)) {
@@ -31,21 +23,16 @@ const main = async () => {
     }
 
     const token = chat.getToken();
+    const actorID = chat.getActorid();
+    const password = crypto
+      .randomBytes(parseInt(passwordLength))
+      .toString("hex");
 
-    const inChat = new InChat();
-    inChat.setToken(token);
-    inChat.setMessage(`Creating a Jitsi meeting for room ${token}`);
-
-    await new Promise((resolve) => client.writeChat(inChat, () => resolve()));
-
-    await jitsi.createRoom(domain, token, botName, "pass1", sleepTime);
-
-    console.log("Created room", `${domain}/${token}`);
-
-    return await new Promise((resolve) =>
-      setInterval(() => resolve(), sleepTime * 1000)
+    await bot.writeChat(
+      token,
+      `@${actorID} started a video call. Tap on https://${domain}/${token} and enter ${password} to join; if no one joins within ${sleepTime} seconds or if the last user leaves, the password will be removed.`
     );
-  });
-};
 
-main();
+    return await jitsi.createRoom(domain, token, botName, password, sleepTime);
+  });
+})();
