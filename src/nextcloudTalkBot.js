@@ -8,14 +8,13 @@ const grpc = require("grpc");
 module.exports = class {
   constructor(nxtalkproxydURL) {
     this.nxtalkproxydURL = nxtalkproxydURL;
-  }
-
-  async readChats(onReceiveChat) {
     this.client = new NextcloudTalkClient(
       this.nxtalkproxydURL,
       grpc.credentials.createInsecure()
     );
+  }
 
+  async readChats(onReceiveChat) {
     const chats = this.client.readChats(new Empty());
     return chats.on("data", async (chat) => onReceiveChat(chat));
   }
