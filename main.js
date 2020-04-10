@@ -3,15 +3,10 @@ const {
   NextcloudTalkClient,
 } = require("./protos/generated/nextcloud_talk_grpc_pb");
 const { InChat } = require("./protos/generated/nextcloud_talk_pb");
+const { Empty } = require("google-protobuf/google/protobuf/empty_pb.js");
 const grpc = require("grpc");
 
 const main = async () => {
-  const roomsToCreate = [
-    ["testroom1", "pass1"],
-    ["testroom2", "pass2"],
-    ["testroom3", "pass3"],
-  ];
-
   const domain = process.env.JITSI_DOMAIN;
   const botName = process.env.JITSI_BOT_NAME;
   const sleepTime = process.env.JITSI_SLEEP_TIME;
@@ -22,30 +17,35 @@ const main = async () => {
     grpc.credentials.createInsecure()
   );
 
-  const inChat = new InChat();
-  inChat.setToken("2j9j95et");
-  inChat.setMessage("Testing");
-
-  await new Promise((resolve) => client.writeChat(inChat, () => resolve()));
-
   const jitsi = new Jitsi();
 
   process.on("SIGINT", async () => await jitsi.close());
   await jitsi.open();
 
-  await Promise.all(
-    roomsToCreate.map(async (room) => {
-      await jitsi.createRoom(domain, room[0], botName, room[1]);
+  const chats = client.readChats(new Empty());
+  chats.on("data", async (chat) => {
+    const message = chat.getMessage();
 
-      console.log("Created room", `${domain}/${room[0]}`);
+    if (!/^#(videochat|videocall)/.test(message)) {
+      return;
+    }
 
-      return await new Promise((resolve) =>
-        setInterval(() => resolve(), sleepTime * 1000)
-      );
-    })
-  );
+    const token = chat.getToken();
 
-  await jitsi.close();
+    const inChat = new InChat();
+    inChat.setToken(token);
+    inChat.setMessage(`Creating a Jitsi meeting for room ${token}`);
+
+    await new Promise((resolve) => client.writeChat(inChat, () => resolve()));
+
+    await jitsi.createRoom(domain, token, botName, "pass1", sleepTime);
+
+    console.log("Created room", `${domain}/${token}`);
+
+    return await new Promise((resolve) =>
+      setInterval(() => resolve(), sleepTime * 1000)
+    );
+  });
 };
 
 main();
