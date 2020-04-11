@@ -1,5 +1,5 @@
 const NextcloudTalkBot = require("./src/nextcloudTalkBot");
-const Jitsi = require("@pojntfx/jitsi-meet-node-client/dist");
+const Jitsi = require("@pojntfx/jitsi-meet-node-client");
 const crypto = require("crypto");
 const log = require("pino")();
 
@@ -14,11 +14,7 @@ const main = async () => {
 
   await jitsi.open();
 
-  try {
-    bot = new NextcloudTalkBot(nxtalkproxydAddr);
-  } catch {
-    console.log("oh no");
-  }
+  const bot = new NextcloudTalkBot(nxtalkproxydAddr);
 
   log.info(`connecting to nxtalkproxyd with address ${nxtalkproxydAddr}`);
 
