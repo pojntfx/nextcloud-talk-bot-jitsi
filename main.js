@@ -4,11 +4,13 @@ const crypto = require("crypto");
 const log = require("pino")();
 
 const main = async () => {
-  const domain = process.env.JITSI_DOMAIN;
-  const botName = process.env.JITSI_BOT_NAME;
-  const sleepTime = process.env.JITSI_SLEEP_TIME;
-  const nxtalkproxydAddr = process.env.NXTALK_PROXYD_ADDR;
-  const passwordLength = process.env.JITSI_PASSWORD_LENGTH;
+  const domain = process.env.BOT_JITSI_DOMAIN;
+  const botName = process.env.BOT_JITSI_BOT_NAME;
+  const sleepTime = process.env.BOT_JITSI_SLEEP_TIME;
+  const nxtalkproxydAddr = process.env.BOT_NXTALK_PROXYD_ADDR;
+  const passwordLength = process.env.BOT_JITSI_PASSWORD_LENGTH;
+  const rawCommands = process.env.BOT_COMMANDS;
+  const commands = rawCommands.split(",");
 
   log.info(`starting WebRTC node subsystem with timeout ${sleepTime} seconds`);
 
@@ -27,7 +29,9 @@ const main = async () => {
 
     const message = chat.getMessage();
 
-    if (!/^#(videochat|videocall)/.test(message)) {
+    const test = new RegExp(`^(${commands.join("|")})`, "g");
+
+    if (!test.test(message)) {
       return;
     }
 
