@@ -4,11 +4,11 @@ const crypto = require("crypto");
 const log = require("pino")();
 
 const main = async () => {
-  const domain = process.env.BOT_JITSI_DOMAIN;
+  const addr = process.env.BOT_JITSI_ADDR;
   const botName = process.env.BOT_JITSI_BOT_NAME;
   const sleepTime = process.env.BOT_JITSI_SLEEP_TIME;
-  const nxtalkproxydAddr = process.env.BOT_NXTALK_PROXYD_ADDR;
-  const passwordLength = process.env.BOT_JITSI_PASSWORD_LENGTH;
+  const nxtalkproxydAddr = process.env.BOT_NXTALKPROXYD_ADDR;
+  const passwordLength = process.env.BOT_JITSI_ROOM_PASSWORD_BYTE_LENGTH;
   const rawCommands = process.env.BOT_COMMANDS;
   const commands = rawCommands.split(",");
 
@@ -49,10 +49,10 @@ const main = async () => {
 
     await bot.writeChat(
       token,
-      `@${actorID} started a video call. Tap on https://${domain}/${token} and enter ${password} to join; if no one joins within ${sleepTime} seconds or if the last user leaves, the password will be removed.`
+      `@${actorID} started a video call. Tap on https://${addr}/${token} and enter ${password} to join; if no one joins within ${sleepTime} seconds or if the last user leaves, the password will be removed.`
     );
 
-    await jitsi.createRoom(domain, token, botName, password, sleepTime);
+    await jitsi.createRoom(addr, token, botName, password, sleepTime);
 
     return log.info(
       `WebRTC subsystem exiting room ${chat.getToken()} after ${sleepTime} seconds`
