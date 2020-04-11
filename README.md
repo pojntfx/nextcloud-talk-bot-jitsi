@@ -25,13 +25,13 @@ As a prerequisite, the bot requires an instance of [`nxtalkproxyd`](https://gith
     -e NXTALKPROXYD_NXTALKPROXYD_PASSWORD=botpassword \
     -e NXTALKPROXYD_NXTALKPROXYD_RADDR=https://examplenextcloud.com \
     --network nxtalkchatbots \
-    --name nxtalkproxy \
-    -d pojntfx/nxtalkproxy
+    --name nxtalkproxyd \
+    -d pojntfx/nxtalkproxyd
 % docker run \
     -e BOT_JITSI_ADDR=meet.jit.si \
     -e BOT_JITSI_BOT_NAME=botusername \
     -e BOT_JITSI_SLEEP_TIME=20 \
-    -e BOT_NXTALKPROXYD_ADDR=nxtalkproxy:1969 \
+    -e BOT_NXTALKPROXYD_ADDR=nxtalkproxyd:1969 \
     -e BOT_JITSI_ROOM_PASSWORD_BYTE_LENGTH=1 \
     -e BOT_COMMANDS=\#videochat,\#videocall,\#custom \
     --network nxtalkchatbots \
