@@ -3,21 +3,28 @@
   "version": "1.0.1",
   "description": "A bot for Nextcloud Talk that creates Jitsi meetings.",
   "main": "main.js",
-  "repository": "git@github.com:pojntfx/nextcloud-talk-bot-jitsi.git",
+  "scripts": {
+    "build": "mkdir -p ./src/protos/generated && grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/protos/generated --grpc_out=./src/protos/generated --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` -I=./src/protos ./src/protos/*.proto",
+    "start": "node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pojntfx/nextcloud-talk-bot-jitsi.git"
+  },
   "author": "Felix Pojtinger <felix@pojtinger.com>",
   "license": "AGPL-3.0",
-  "private": false,
+  "bugs": {
+    "url": "https://github.com/pojntfx/nextcloud-talk-bot-jitsi/issues"
+  },
+  "homepage": "https://github.com/pojntfx/nextcloud-talk-bot-jitsi#readme",
   "devDependencies": {
     "grpc-tools": "^1.8.1"
   },
   "dependencies": {
-    "@pojntfx/jitsi-meet-node-client": "^1.0.4",
+    "@pojntfx/jitsi-meet-node-client": "^1.0.7",
     "google-protobuf": "^3.11.4",
     "grpc": "^1.24.2",
     "pino": "^6.1.1"
-  },
-  "scripts": {
-    "build": "mkdir -p ./src/protos/generated && grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/protos/generated --grpc_out=./src/protos/generated --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` -I=./src/protos ./src/protos/*.proto",
-    "start": "node main.js"
   }
 }
