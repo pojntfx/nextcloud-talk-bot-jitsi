@@ -4,7 +4,6 @@
   "description": "A bot for Nextcloud Talk that creates Jitsi meetings.",
   "main": "main.js",
   "scripts": {
-    "build": "mkdir -p ./src/protos/generated && grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src/protos/generated --grpc_out=./src/protos/generated --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` -I=./src/protos ./src/protos/*.proto",
     "start": "node main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,12 +18,18 @@
   },
   "homepage": "https://github.com/pojntfx/nextcloud-talk-bot-jitsi#readme",
   "devDependencies": {
-    "grpc-tools": "^1.8.1"
+    "@grpc/grpc-js": "^1.0.3",
+    "@grpc/proto-loader": "^0.5.4"
   },
   "dependencies": {
     "@pojntfx/jitsi-meet-node-client": "^1.0.7",
     "google-protobuf": "^3.11.4",
-    "grpc": "^1.24.2",
-    "pino": "^6.1.1"
-  }
+    "pino": "^6.1.1",
+    "js-yaml": "^3.13.1",
+    "yargs": "^15.3.1"
+  },
+  "keywords": [
+    "grpc",
+    "nctalkbot-jitsi"
+  ]
 }
