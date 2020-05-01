@@ -1,7 +1,10 @@
 nctalkbot:
-    botName: botusername
-    commands: [ "#chat", "#meeting" , "#custom" ]
-    sleepTime: 20
-    jitsiAddr: meet.jit.si,
-    jitsiRoomPasswordByteLength: 4
-    nctalkproxydAddr: nxtalkproxyd:1969
+  botName: botusername
+  commands:
+    - "#chat"
+    - "#meeting"
+    - "#jitsimeet"
+  sleepTimer: 20
+  jitsiAddr: meet.jit.si
+  jitsiRoomPasswordLength: 4
+  nctalkproxydAddr: "[::1]:1969"
