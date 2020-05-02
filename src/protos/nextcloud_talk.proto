@@ -2,9 +2,10 @@ syntax = "proto3";
 
 package nextcloudTalk;
 
+// Googles protobuf package serving message struct Empty {}
 import "google/protobuf/empty.proto";
 
-// NextcloudTalk is a Nextcloud Talk client.
+// NextcloudTalk message types interacting with Nextcloud Talk API
 service NextcloudTalk {
   rpc ReadChats(google.protobuf.Empty) returns (stream OutChat);
   rpc WriteChat(InChat) returns (google.protobuf.Empty);

@@ -1,16 +1,20 @@
-const {
-  NextcloudTalkClient,
-} = require("./protos/generated/nextcloud_talk_grpc_pb");
-const { InChat } = require("./protos/generated/nextcloud_talk_pb");
-const { Empty } = require("google-protobuf/google/protobuf/empty_pb.js");
-const grpc = require("grpc");
+const path = require('path');
+const grpcLibrary = require('@grpc/grpc-js');
+const { loadProtoFile } = require('./common');
 
-module.exports = class {
-  constructor(nxtalkproxydURL) {
-    this.nxtalkproxydURL = nxtalkproxydURL;
+const protoFile = path.join(__dirname, 'protos', 'nextcloud_talk.proto');
+const NextcloudTalkClient = loadProtoFile(protoFile).nextcloudTalk.NextcloudTalk;
+const InChat = loadProtoFile(protoFile).nextcloudTalk.NextcloudTalk.InChat;
+const Empty = loadProtoFile(protoFile).nextcloudTalk;
+
+const clientInsecureCreds = grpcLibrary.credentials.createInsecure();
+
+module.exports = class NextcloudTalkBot {
+  constructor(nctalkproxydURL) {
+    this.nctalkproxydURL = nctalkproxydURL;
     this.client = new NextcloudTalkClient(
-      this.nxtalkproxydURL,
-      grpc.credentials.createInsecure()
+	this.nctalkproxydURL,
+	clientInsecureCreds
     );
   }
 
