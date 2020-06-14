@@ -11,7 +11,7 @@ part of the [Nextcloud Talk Bot Framework](https://github.com/pojntfx/nextcloud-
 
 ## Installation
 
-A Docker image is available at [Docker Hub](https://hub.docker.com/r/pojntfx/nextcloud-talk-bot-jitsi).
+A Docker image is available at [Docker Hub](https://hub.docker.com/r/pojntfx/nctalkbot-jits).
 
 ## Usage
 
